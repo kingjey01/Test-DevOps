@@ -35,3 +35,41 @@ def preparer_remboursement(request):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+
+
+
+
+
+###### CODE JS
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$("#btnRembourser").click(function () {
+
+    let client_id = $("#client_id").val();
+    let montant = $("#montant").val();
+    let reservation_id = $("#reservation_id").val();
+
+    $.ajax({
+        url: "{% url 'preparer_remboursement' %}",
+        type: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        contentType: "application/json",
+        data: JSON.stringify({
+            client_id: client_id,
+            montant: montant,
+            reservation_id: reservation_id
+        }),
+        success: function (response) {
+            if (response.success) {
+                window.location.href = response.redirect_url;
+            }
+        },
+        error: function (xhr) {
+            alert("Erreur : " + xhr.responseJSON.error);
+        }
+    });
+});
+</script>
